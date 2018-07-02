@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>购彩首页</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="" type="text/javascript" charset="utf-8"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js"></script>
+
+
+        <script>
+            function detail(code) {
+                location.href= "/showDetail?code="+code;
+            }
+        </script>
+		<style type="text/css">
+			.title {
+				width: 360px;
+				height: 55px;
+				line-height: 55px;
+				background-color: gainsboro;
+				color: rgba(255, 64, 129, 1);
+				font-size: 20px;
+				text-align: center;
+				font-family: Microsoft Yahei;
+			}
+			
+			* {
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.item-ball {
+				display: inline-block;
+				width: 32px;
+				height: 35px;
+				line-height: 35px;
+				font-size: 14px;
+				text-align: center;
+				font-family: Roboto;
+				border-radius: 100%;
+				margin-left: 0px;
+				margin-right: 5px;
+				margin-top: 5px;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			.ball-red {
+				color: rgba(255, 0, 0, 1);
+			}
+			
+			.ball-bule {
+				color: rgba(0, 0, 255, 1);
+			}
+			
+			.menu{
+				background-color:gainsboro;
+				padding-top: 5px;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+			}
+			
+			.menu-item{
+				text-align: center;
+			}
+
+			
+			.active-menu-item{
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--根标签
+			布局容器
+			container-fluid 占据全部视口（viewport）的容器
+		-->
+		<div class="container-fluid">
+
+			<!--栅格系统-->
+			<!--1 标题-->
+			<div class="row title">
+				斌哥世界杯博彩
+			</div>
+
+			<!--2 轮播图-->
+			<div id="carousel-example-generic" class="carousel slide row" data-ride="carousel" style="height: 180px;">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+					<div class="item active">
+						<img src="img/1.png" alt="...">
+						<div class="carousel-caption">
+							...
+						</div>
+					</div>
+					<div class="item">
+						<img src="img/2.png" alt="...">
+						<div class="carousel-caption">
+							...
+						</div>
+					</div>
+					<div class="item">
+						<img src="img/3.png" alt="...">
+						<div class="carousel-caption">
+
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Controls -->
+				<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+
+			<!--3 论坛-->
+			<div class="row" onclick="location.href='/note/bbsIndex'">
+				<div>
+					<h4 style="margin-top: 25px;">话说世界杯</h4>
+					<h5>论坛中最新的帖子...</h5>
+				</div>
+
+			</div>
+			<!--4 往期开奖号-->
+			<div th:each="history:${balls}"  class="row" style="border: solid gainsboro 1px ; height: 80px ;padding-top: 5px;" th:onclick="|detail(${history.code})|" >
+				<div class="col-xs-11 row" style="margin-left: 0;">
+
+					<div class="row">
+						<span style="font-size: 18px;margin-left: 10px;" th:text="|第${history.code}期|">第2018019期</span>
+						<span style="font-size:12px ; margin-left: 5px;" th:text="|第${history.date}|">第2018-06-20(二)</span>
+					</div>
+					<!--往期球-->
+					<div class="item-ball ball-red">
+						<span th:text="${history.red.split(',')[0]}">01</span>
+					</div>
+					<div class="item-ball ball-red">
+						<span th:text="${history.red.split(',')[1]}">01</span>
+					</div>
+					<div class="item-ball ball-red">
+						<span th:text="${history.red.split(',')[2]}">01</span>
+					</div>
+					<div class="item-ball ball-red">
+						<span th:text="${history.red.split(',')[3]}">01</span>
+					</div>
+					<div class="item-ball ball-red">
+						<span th:text="${history.red.split(',')[4]}">01</span>
+					</div>
+					<div class="item-ball ball-red">
+						<span th:text="${history.blue}">01</span>
+					</div>
+					<div class="item-ball ball-bule">
+						<span>01</span>
+					</div>
+				</div>
+				<div class="col-xs-1" style="margin-top: 20px;">
+					<div class="glyphicon glyphicon-chevron-right"></div>
+				</div>
+			</div>
+			
+			<div style="margin-bottom: 50px;"></div>
+
+            <!--页脚-->
+            <div th:replace="~{/common/footMenu :: #menu_div}"></div>
+        </div>
+	</body>
+
+</html>

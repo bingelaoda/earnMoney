@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<title>订单详情</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+	<script src="" type="text/javascript" charset="utf-8"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="js/jquery-1.12.4.min.js" th:src="@{/js/jquery-1.12.4.min.js}" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+		<style type="text/css">
+			.title {
+				width: 360px;
+				height: 55px;
+				line-height: 55px;
+				color: rgba(16, 16, 16, 1);
+				font-size: 20px;
+				text-align: center;
+				font-family: Roboto;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			* {
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.item-ball {
+				display: inline-block;
+				width: 32px;
+				height: 35px;
+				line-height: 35px;
+				font-size: 14px;
+				text-align: center;
+				font-family: Roboto;
+				border-radius: 100%;
+				margin-left: 10px;
+				margin-right: 5px;
+				margin-top: 5px;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			.ball-red {
+				color: rgba(255, 0, 0, 1);
+			}
+			
+			.ball-bule {
+				color: rgba(0, 0, 255, 1);
+			}
+			
+			.menu {
+				background-color: gainsboro;
+				padding-top: 5px;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+			}
+			
+			.menu-item {
+				text-align: center;
+			}
+			
+			.active-menu-item {
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--根标签
+			布局容器
+			container-fluid 占据全部视口（viewport）的容器
+		-->
+		<div class="container-fluid">
+
+			<!--栅格系统-->
+			<!--1 标题-->
+			<div class="row title">
+				<div style="position: absolute; font-size: 15px;"  onclick="location.href='/cart/showCartUI'">&lt;返回</div>
+				<div>双色球</div>
+			</div>
+
+			<div class="row" style="margin-top: 10px;border: solid gainsboro 1px;">
+				<div class="col-xs-5">
+					<div>第 <span th:text="${session.order.orderItems.get(0).code}">2018022</span>期</div>
+					<div th:text="|订单编号：${session.order.oid}|">订单编号：</div>
+					<div th:switch="${session.order.state}">
+
+						<div th:case="0">订单状态：未付款</div>
+						<div th:case="1">订单状态：待开奖</div>
+						<div th:case="2">订单状态：已中奖</div>
+						<div th:case="3">订单状态：已兑奖</div>
+						<div th:case="3">订单状态：未中奖</div>
+						<div th:case="*">未知状态</div>
+					</div>
+				</div>
+				<div class="col-xs-4" style="text-align: right">开奖时间：</div>
+				<div class="col-xs-3" style="text-align: right">金额: <span th:text="${session.order.total}"></span></div>
+			</div>
+			
+
+		<!--选中的一注-->
+		<div class="row" style="margin-top: 0px;border: 1px solid rgba(187, 187, 187, 1);" th:each="one:${session.order.orderItems}">
+
+		<div class="col-xs-11" style="margin-right: 0px; padding-left: 0;padding-right: 0px;margin-top: 10px;">
+			<div style="align-content: center;">
+				<div class="item-ball ball-red" style="margin-left: 10px;padding-right: 0px;">
+					<span th:text="${one.red.split(',')[0]}">13</span>
+				</div>
+				<div class="item-ball ball-red" style="margin-left: 0px">
+					<span th:text="${one.red.split(',')[1]}">05</span>
+				</div>
+				<div class="item-ball ball-red" style="margin-left: 0px">
+					<span th:text="${one.red.split(',')[2]}">08</span>
+				</div>
+				<div class="item-ball ball-red" style="margin-left: 0px">
+					<span th:text="${one.red.split(',')[3]}">23</span>
+				</div>
+				<div class="item-ball ball-red" style="margin-left: 0px">
+					<span th:text="${one.red.split(',')[4]}">17</span>
+				</div>
+				<div class="item-ball ball-red" style="margin-left: 0px">
+					<span th:text="${one.red.split(',')[5]}">09</span>
+				</div>
+				<div class="item-ball ball-bule" style="margin-left: 0px;margin-right: 0px;">
+					<span th:text="${one.blue}">22</span>
+				</div>
+			</div>
+
+			<div style="margin-left: 10px;margin-top: 10px;">单式 <span th:text="${one.count}">一</span>注 <span th:text="${one.count*2}">两</span>元</div>
+		</div>
+		<div class="col-xs-1 glyphicon glyphicon-chevron-right" style="margin-top: 25px;padding-right: 0px;height: 10px; width: 20px;">
+		</div>
+
+
+			<!--7 页脚菜单栏-->
+
+			<div class="menu ">
+				<div class="col-xs-12 menu-item">
+					<div style="height: 40px;line-height: 40px;" onclick="location.href='/order/orderDetail'">立即付款 <span th:text="${session.cart.total}">6</span>元</div>
+
+				</div>
+			</div>
+
+		</div>
+		</div>
+	</body>
+
+</html>

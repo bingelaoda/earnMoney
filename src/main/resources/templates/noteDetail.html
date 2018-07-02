@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>博彩论坛</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <script src="" type="text/javascript" charset="utf-8"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <style type="text/css">
+        .title {
+            width: 360px;
+            height: 55px;
+            line-height: 55px;
+            background-color: gainsboro;
+            color: rgba(255, 64, 129, 1);
+            font-size: 20px;
+            text-align: center;
+            font-family: Microsoft Yahei;
+        }
+
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .item-ball {
+            display: inline-block;
+            width: 32px;
+            height: 35px;
+            line-height: 35px;
+            font-size: 14px;
+            text-align: center;
+            font-family: Roboto;
+            border-radius: 100%;
+            margin-left: 0px;
+            margin-right: 5px;
+            margin-top: 5px;
+            border: 1px solid rgba(187, 187, 187, 1);
+        }
+
+        .ball-red {
+            color: rgba(255, 0, 0, 1);
+        }
+
+        .ball-bule {
+            color: rgba(0, 0, 255, 1);
+        }
+
+        .menu{
+            background-color:gainsboro;
+            padding-top: 5px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .comment{
+            padding-top: 5px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .menu-item{
+            text-align: center;
+        }
+
+
+        .active-menu-item{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<!--根标签
+    布局容器
+    container-fluid 占据全部视口（viewport）的容器
+-->
+<div class="container-fluid">
+
+    <!--栅格系统-->
+    <!--1 标题-->
+    <div class="row title">
+        博彩论坛
+    </div>
+
+
+    <!--3 论坛-->
+    <div class="row" style="margin-top: 10px;margin-left: 0px;">
+
+        <!--1 作者跟日期-->
+        <!--2 标题-->
+        <!--评论区-->
+        <!--帖子列表-->
+        <div class="row">
+            <div class="col-xs-11">
+                <div class="row" style="line-height: 20px;word-break: break-all;">
+                    <h4 th:text="${note.title}">我买的这注01,11,20,23,25,30...彩票</h4>
+                </div>
+                <div class="row">
+                    <span style="font-size:14px" th:text="${note.username}">小凯凯</span><span style="font-size:12px;margin-left:4px" th:text="${note.time}">2018-01-06 21:20:20</span>
+                </div>
+                <div class="row" th:each="p:${note.comments}">
+                    <div th:text="${p.content}">老衲昨晚夜观天象,这注彩票今天一定会中奖....</div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function oneNoteDetail(nid) {
+                location.href="/note/noteDetail?nid="+nid
+            }
+        </script>
+
+
+    </div>
+
+
+    <!--发表评论-->
+
+    <div style="margin-bottom: 200px;"></div>
+
+    <div class="row" style="position: fixed;bottom: 0;width: 100%;">
+
+        <!--<form action="#" th:action="@{/note/addNote}" method="post">-->
+            <form action="/comment/addComment" method="post">
+                <!--需要知道是哪一个titile下面的-->
+                <input type="hidden" name="nid" th:value="${note.nid}">
+            <!--输入框-->
+            <textarea class="form-control" name="content" style="height: 100px;" placeholder="请输入评论内容..."></textarea>
+            <!--确认发表的按钮-->
+            <button type="submit" class="form-control">发表</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

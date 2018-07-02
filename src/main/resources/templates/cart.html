@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>订单详情</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+		<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+		<script src="" type="text/javascript" charset="utf-8"></script>
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="js/jquery-1.12.4.min.js" th:src="@{/js/jquery-1.12.4.min.js}" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+		<script>
+			function autoOne() {
+				location.href="/cart/choiceBall?randomOneFlag=true"
+            }
+            
+            function moveOne(ball) {
+
+                location.href = "/cart/removeOne?ball="+ball;
+            }
+            
+            function removeAll() {
+                location.href = "/cart/removeAll";
+            }
+		</script>
+		<style type="text/css">
+			.title {
+				width: 360px;
+				height: 55px;
+				line-height: 55px;
+				color: rgba(16, 16, 16, 1);
+				font-size: 20px;
+				text-align: center;
+				font-family: Roboto;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			* {
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.item-ball {
+				display: inline-block;
+				width: 32px;
+				height: 35px;
+				line-height: 35px;
+				font-size: 14px;
+				text-align: center;
+				font-family: Roboto;
+				border-radius: 100%;
+				margin-left: 10px;
+				margin-right: 5px;
+				margin-top: 5px;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			.ball-red {
+				color: rgba(255, 0, 0, 1);
+			}
+			
+			.ball-bule {
+				color: rgba(0, 0, 255, 1);
+			}
+			
+			.menu {
+				background-color: gainsboro;
+				padding-top: 5px;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+			}
+			
+			.menu-item {
+				text-align: center;
+			}
+			
+			.active-menu-item {
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--根标签
+			布局容器
+			container-fluid 占据全部视口（viewport）的容器
+		-->
+		<div class="container-fluid">
+
+			<!--栅格系统-->
+			<!--1 标题-->
+			<div class="row title">
+				<div style="position: absolute; font-size: 15px;" onclick="location.href='/'">&lt;返回</div>
+				<div>购物车</div>
+			</div>
+
+
+			<!--三个按钮-->
+			<div class="row">
+				<div class="col-xs-4">
+					<input type="button" class="btn-default" value="+手动选号" onclick="location.href='/cart/choiceBall'"/>
+				</div>
+				<div class="col-xs-4">
+					<input type="button" class="btn-default" value="+机选一注" onclick="autoOne()"/>
+				</div>
+				<div class="col-xs-4">
+					<input type="button" class="btn-default" value="+清空列表" onclick="removeAll()"/>
+				</div>
+			</div>
+
+			<!--选中的一注-->
+			<div class="row" style="margin-top: 10px;border: 1px solid rgba(187, 187, 187, 1);" th:each="one:${session.cart.cartItems}">
+
+				<div class="col-xs-1 glyphicon glyphicon-remove-circle" style="margin-top: 25px;" th:onclick="|moveOne('${one.red}'+'-'+'${one.blue}')|">
+                
+				</div>
+				<div class="col-xs-10" style="margin-right: 0px; padding-left: 0;padding-right: 0px;">
+					<div style="align-content: center ">
+						<div class="item-ball ball-red" style="margin-left: 10px;padding-right: 0px;">
+							<span th:text="${one.getRed().split(',')[0]}">13</span>
+						</div>
+						<div class="item-ball ball-red" style="margin-left: 0px">
+							<span th:text="${one.getRed().split(',')[1]}">05</span>
+						</div>
+						<div class="item-ball ball-red" style="margin-left: 0px">
+							<span th:text="${one.getRed().split(',')[2]}">08</span>
+						</div>
+						<div class="item-ball ball-red" style="margin-left: 0px">
+							<span th:text="${one.getRed().split(',')[3]}">23</span>
+						</div>
+						<div class="item-ball ball-red" style="margin-left: 0px">
+							<span th:text="${one.getRed().split(',')[4]}">17</span>
+						</div>
+						<div class="item-ball ball-red" style="margin-left: 0px">
+							<span th:text="${one.getRed().split(',')[5]}">09</span>
+						</div>
+						<div class="item-ball ball-bule" style="margin-left: 0px;margin-right: 0px;">
+							<span th:text="${one.getBlue()}">22</span>
+						</div>
+					</div>
+					
+					<div style="margin-left: 10px;margin-top: 10px;">单式 <span th:text="${one.count}">1</span>注 <span th:text="${one.subtotal}">2</span>元</div>
+				</div>
+				<div class="col-xs-1 glyphicon glyphicon-chevron-right" style="margin-top: 25px;padding-right: 0px;height: 10px; width: 20px;">
+					
+				</div>
+
+			</div>
+
+			<div style="margin-bottom: 50px;"></div>
+			<!--7 页脚菜单栏-->
+
+			<div class="menu ">
+				<div class="col-xs-12 menu-item">
+					<div style="height: 40px;line-height: 40px;" onclick="location.href='/order/orderList'">立即付款 <span th:text="${session.cart.total}">6</span>元</div>
+
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

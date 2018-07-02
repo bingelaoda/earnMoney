@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<script>
+    function dianwo(msg) {
+        console.log(msg);
+        alert(msg)
+    }
+</script>
+    <div>
+        <input type="button" onclick="dianwo('44944')" th:onclick="|dianwo('${cities}')|" value="dianwo">
+    </div>
+<body>
+
+</body>
+</html>

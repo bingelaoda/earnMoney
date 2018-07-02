@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<title>购彩首页</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+	<script src="" type="text/javascript" charset="utf-8"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="js/jquery-1.12.4.min.js" th:src="@{/js/jquery-1.12.4.min.js}" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+		<style type="text/css">
+			.title {
+				width: 360px;
+				height: 55px;
+				line-height: 55px;
+				background-color: gainsboro;
+				font-size: 20px;
+				text-align: center;
+				font-family: Microsoft Yahei;
+			}
+			
+			* {
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.item-ball {
+				display: inline-block;
+				width: 32px;
+				height: 35px;
+				line-height: 35px;
+				font-size: 14px;
+				text-align: center;
+				font-family: Roboto;
+				border-radius: 100%;
+				margin-left: 0px;
+				margin-right: 5px;
+				margin-top: 5px;
+				border: 1px solid rgba(187, 187, 187, 1);
+			}
+			
+			.ball-red {
+				color: rgba(255, 0, 0, 1);
+			}
+			
+			.ball-bule {
+				color: rgba(0, 0, 255, 1);
+			}
+			
+			.menu {
+				background-color: gainsboro;
+				padding-top: 5px;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+			}
+			
+			.menu-item {
+				text-align: center;
+			}
+			
+			.active-menu-item {
+				color: red;
+			}
+			
+			.ball-red-selected {
+				background-color: rgba(256, 0, 0, 0.5);
+				font-weight: bold;
+				color: white;
+			}
+			
+			.ball-blue-selected {
+				background-color: rgba(0, 0, 256, 0.5);
+				font-weight: bold;
+				color: white;
+			}
+		</style>
+
+		<script type="text/javascript" th:inline="javascript">
+
+
+
+
+			//目标是随机产生几注号码
+			//将产生的号码发送给后端保存起来
+
+			//红球被选中的逻辑
+			$(function() {
+
+
+
+                var randomOneFlag = [[${randomOneFlag}]];
+
+                if (randomOneFlag!=null){
+                    randomOne();
+                }
+                $("#addOneBall").click(function () {
+
+                    var len = $(".ball-red-selected").length;
+
+                    if (len==0){
+                        //长度为0的时候，首先选号
+                        randomOne();
+                    }else if (len<6||len>6){
+                        alert("球的数量不对")
+                    } else {
+                        var balls="";
+                        $(".ball-red-selected").each(function (i,OneBall){
+                            balls +=","+ $(OneBall).text().trim();
+                        })
+
+                        balls=balls.substr(1);
+
+                        //获得绿球
+                        var blueBall = $($(".ball-blue-selected").get(0)).text().trim();
+                        var arr2 = Array();
+                        //装配成数组形式
+                        var one = {"red":balls,"blue":blueBall};
+
+                        arr2.push(one);
+
+                        //清除上一次点击选中的球
+                        $(".ball-red-selected").removeClass("ball-red-selected")
+                        $(".ball-blue-selected").removeClass("ball-blue-selected")
+
+                        //现在将数据发送到
+                        $.post("/cart/addToCart",{"balls":JSON.stringify(arr2)},function (data) {
+                            //将购物车中的数量显示出来
+                            $("#cartSizeId").text(data.cartItemSize);
+                        },"json");
+
+                    }
+                })
+
+
+
+                $("#randomBall").click(function () {
+                    //获取随机的数量
+                    var num = $("#randNum").val();
+                    //通过循环产生每组号码，并且将每组号码保存
+                    var  arr = Array();
+                    for (var i=0;i<num;i++){
+                        randomOne();
+                        var balls="";
+                        $(".ball-red-selected").each(function (i,OneBall){
+                            balls +=","+ $(OneBall).text().trim();
+                        })
+
+                        balls=balls.substr(1);
+
+                        //获得绿球
+                        var blueBall = $($(".ball-blue-selected").get(0)).text().trim();
+
+                        //装配成数组形式
+                        var one = {"red":balls,"blue":blueBall};
+                        arr.push(one);
+
+                    }
+
+                    //现在将数据发送到
+                    $.post("/cart/addToCart",{"balls":JSON.stringify(arr)},function (data) {
+                       	//将购物车中的数量显示出来
+                        $("#cartSizeId").text(data.cartItemSize);
+                    },"json");
+                })
+
+			    //如果被点击的球不是ball-red-selected
+
+
+
+				$(".ball-red").click(function() {
+					var isSelected = $(this).is(".ball-red-selected")
+					if(isSelected) {
+						$(this).removeClass("ball-red-selected")
+					} else {
+						var len = $(".ball-red-selected").length
+						if(len < 6) {
+							$(this).addClass("ball-red-selected")
+						} else {
+							alert("只能选取六个红球")
+						}
+					}
+
+				})
+				
+				$(".ball-blue").click(function(){
+					$(".ball-blue-selected").removeClass("ball-blue-selected")
+					$(this).addClass("ball-blue-selected")
+				})
+
+			})
+
+
+				
+			function randomOne(){
+				//产生一个随机数，通过随机数作为角标，操作对应元素的样式
+				
+				//清除上一次点击选中的球
+				$(".ball-red-selected").removeClass("ball-red-selected")
+				$(".ball-blue-selected").removeClass("ball-blue-selected")
+				while($(".ball-red-selected").length<6){
+					var rand = Math.floor(Math.random()*33);
+					$($(".ball-red").get(rand)).addClass("ball-red-selected")
+				}
+				
+				while($(".ball-blue-selected").length<1){
+					var rand = Math.floor(Math.random()*16);
+					$($(".ball-blue").get(rand)).addClass("ball-blue-selected")
+				}
+				
+				
+				
+				
+				
+				
+				
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--根标签
+			布局容器
+			container-fluid 占据全部视口（viewport）的容器
+		-->
+		<div class="container-fluid">
+
+			<!--栅格系统-->
+			<!--1 标题-->
+			<div class="row title">
+				<div style="position: absolute; font-size: 15px;" onclick="location.href='index.html'">&lt;返回</div>
+				<div>选号</div>
+			</div>
+
+			<!--2 期数-->
+			<div class="row" style="margin-top: 10px;margin-bottom: 10px;">
+
+				<div class="col-xs-4">第2018019期</div>
+				<div class="col-xs-8" style="margin-left: 0px; padding-left: 0px;">
+					奖池 <span style="color: red;">&nbsp;4亿1523万</span>&nbsp;可开出&nbsp;<span style="color: red;">43注</span>500万
+				</div>
+
+			</div>
+
+			<!--3 选号-->
+			<div>
+				<div style="margin-bottom: 10px;">
+					请选择6个红球1个蓝球
+				</div>
+			</div>
+			<!--4 红球区域-->
+			<div>
+				<!--往期球-->
+				<div class="item-ball ball-red">
+					<span>01</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>02</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>03</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>04</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>05</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>06</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>07</span>
+				</div>
+				<div class="item-ball ball-red">
+					<span>08</span>
+				</div>
+			</div>
+
+		</div>
+		<div>
+			<!--往期球-->
+			<div class="item-ball ball-red" style="margin-left: 15px;">
+				<span>09</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>10</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>11</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>12</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>13</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>14</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>15</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>16</span>
+			</div>
+		</div>
+
+		</div>
+		<div>
+			<!--往期球-->
+			<div class="item-ball ball-red" style="margin-left: 15px;">
+				<span>17</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>18</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>19</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>20</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>21</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>22</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>23</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>24</span>
+			</div>
+		</div>
+
+		</div>
+		<div>
+			<!--往期球-->
+			<div class="item-ball ball-red" style="margin-left: 15px;">
+				<span>25</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>26</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>27</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>28</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>29</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>30</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>31</span>
+			</div>
+			<div class="item-ball ball-red">
+				<span>32</span>
+			</div>
+		</div>
+
+		</div>
+		<div>
+			<div class="item-ball ball-red" style="margin-left: 15px;margin-bottom: 10px;">
+				<span>33</span>
+			</div>
+		</div>
+
+		<div>
+			<!--往期球-->
+			<div class="item-ball ball-blue" style="margin-left: 15px;">
+				<span>01</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>02</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>03</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>04</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>05</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>06</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>07</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>08</span>
+			</div>
+		</div>
+
+		</div>
+		<div>
+			<!--往期球-->
+			<div class="item-ball ball-blue" style="margin-left: 15px;">
+				<span>09</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>10</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>11</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>12</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>13</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>14</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>15</span>
+			</div>
+			<div class="item-ball ball-blue">
+				<span>16</span>
+			</div>
+		</div>
+
+		</div>
+
+		<!--添加按钮-->
+		<div>
+			<input type="button" id="addOneBall" class="btn btn-default" value="添加" style="float: right; margin-right: 30px ;margin-top: 15px;margin-bottom: 10px;" />
+		</div>
+		<div class="clearfix"></div>
+
+		<!--下拉框及机选号码按钮-->
+		<div>
+
+			<input type="button" class="btn-default pull-right" value="机选幸运号" style="width: 80px;height: 32px;margin-right: 30px;" id="randomBall"/>
+			<select name="" id="randNum" class="form-control pull-right " style="display: inline-block;width: 60px;">
+				<option >1</option>
+				<option >2</option>
+				<option >3</option>
+				<option >4</option>
+				<option >5</option>
+				<option >6</option>
+				<option >7</option>
+				<option >8</option>
+				<option >9</option>
+				<option >10</option>
+				<option >11</option>
+				<option >12</option>
+			</select>
+
+		</div>
+
+		<div style="margin-bottom: 100px;"></div>
+		<!--7 页脚菜单栏-->
+
+
+
+		<div class="menu">
+
+			<div class="col-xs-6 menu-item" onclick="location.href='/cart/showCartUI'">
+				<div class="glyphicon glyphicon-shopping-cart"></div>
+				<span id="cartSizeId" class="badge" style="background-color: red;position: absolute;top: -10px"></span>
+				<div>购物车</div>
+			</div>
+			<div class="col-xs-6 menu-item">
+				<div class="glyphicon glyphicon-save"></div>
+				<div>立即下注</div>
+			</div>
+
+		</div>
+	</body>
+
+</html>

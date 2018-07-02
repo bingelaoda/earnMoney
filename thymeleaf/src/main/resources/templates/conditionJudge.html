@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<div th:if="${msg} >10">demo2</div>
+<div th:if="${msg} <=10">11demo2</div>
+
+<div th:text="${msg}>10 ?'厉害':'不厉害'"></div>
+
+<div th:switch="${msg}">
+    <div th:case="10">等于10</div>
+    <div th:case="*">不等于10</div>
+</div>
+
+<body>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<title>购彩首页</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+	<script src="" type="text/javascript" charset="utf-8"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="js/jquery-1.12.4.min.js" th:src="@{/js/jquery-1.12.4.min.js}" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+	<style type="text/css">
+		.title {
+			width: 360px;
+			height: 55px;
+			line-height: 55px;
+			background-color: gainsboro;
+			color: rgba(255, 64, 129, 1);
+			font-size: 20px;
+			text-align: center;
+			font-family: Microsoft Yahei;
+		}
+
+		* {
+			padding: 0px;
+			margin: 0px;
+		}
+
+		.item-ball {
+			display: inline-block;
+			width: 32px;
+			height: 35px;
+			line-height: 35px;
+			font-size: 14px;
+			text-align: center;
+			font-family: Roboto;
+			border-radius: 100%;
+			margin-left: 0px;
+			margin-right: 5px;
+			margin-top: 5px;
+			border: 1px solid rgba(187, 187, 187, 1);
+		}
+
+		.ball-red {
+			color: rgba(255, 0, 0, 1);
+		}
+
+		.ball-bule {
+			color: rgba(0, 0, 255, 1);
+		}
+
+		.menu {
+			background-color: gainsboro;
+			padding-top: 5px;
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		.menu-item {
+			text-align: center;
+		}
+
+		.active-menu-item {
+			color: red;
+		}
+
+		.userimg {
+
+			width: 100px;
+			height: 100px;
+			border-radius: 50px 50px 50px 50px;
+			border: 2px solid rgba(247, 209, 20, 1);
+		}
+	</style>
+</head>
+
+<body>
+<!--根标签
+    布局容器
+    container-fluid 占据全部视口（viewport）的容器
+-->
+<div class="container-fluid">
+
+	<!--栅格系统-->
+	<!--1 标题-->
+	<div class="row title">
+		我
+	</div>
+
+	<div class="row" style="margin-top: 10px">
+		<div class="col-xs-4">
+			<img src="img/icon.jpg" th:src="${session.user?.headimg}" alt="" class="img-circle img-thumbnail" style="width:80px;height:80px" />
+		</div>
+		<div class="col-xs-8">
+			<div style="margin-top: 15px;" th:text="${session.user.username}">用户名</div>
+			<div style="margin-top: 15px;" th:text="|电话号码：${session.user.mobile}|">电话号码：05562286180</div>
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="row col-xs-12" style="margin-top: 50px;">
+			您今日幸运中奖号码为：
+		</div>
+
+		<div class="col-xs-12 text-center" style="height:49px;margin-top: 10px;">
+			<div class="item-ball ball-red" th:text="${redBalls.get(0)}">01</div>
+			<div class="item-ball ball-red" th:text="${redBalls.get(1)}">03</div>
+			<div class="item-ball ball-red" th:text="${redBalls.get(2)}">08</div>
+			<div class="item-ball ball-red" th:text="${redBalls.get(3)}">12</div>
+			<div class="item-ball ball-red" th:text="${redBalls.get(4)}">23</div>
+			<div class="item-ball ball-red" th:text="${redBalls.get(5)}">29</div>
+			<div class="item-ball ball-bule" th:text="${blueBall}">15</div>
+		</div>
+
+		<div class="col-xs-offset-7 col-xs-2">
+			<button class="btn btn-default">购买立中大奖</button>
+		</div>
+	</div>
+	<hr />
+
+
+	<div class="row">
+		<div class="col-xs-6">累计中奖次数:<span>700</span></div>
+		<div class="col-xs-6 text-right">累计中奖金额:<span>700</span></div>
+</div>
+
+<hr  />
+
+<div class="row">
+	<div >账户余额：<span th:text="${session.user.money}">1:00</span>元</div>
+</div>
+<hr  />
+<div class="row" style="margin-top: 10px;">
+	我的订单:
+</div>
+<hr />
+<div class="row" style="margin-top: 10px;">
+	基本信息:
+</div>
+<hr  />
+<div class="row" style="margin-top: 10px;">
+	设置:
+</div>
+<hr  />
+
+<div style="margin-bottom: 50px;"></div>
+<!--7 页脚菜单栏-->
+
+	<div th:replace="~{/common/footMenu2 ::#menu_div}"></div>
+
+</div>
+</body>
+
+</html>
